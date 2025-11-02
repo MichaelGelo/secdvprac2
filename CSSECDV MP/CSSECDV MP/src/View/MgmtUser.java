@@ -12,7 +12,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -49,7 +48,7 @@ public class MgmtUser extends javax.swing.JPanel {
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
             tableModel.addRow(new Object[]{
                 users.get(nCtr).getUsername(), 
-                users.get(nCtr).getPassword(), 
+                "**", 
                 users.get(nCtr).getRole(), 
                 users.get(nCtr).getLocked()});
         }
@@ -222,8 +221,8 @@ public class MgmtUser extends javax.swing.JPanel {
 
     private void chgpassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chgpassBtnActionPerformed
         if(table.getSelectedRow() >= 0){
-            JTextField password = new JPasswordField();
-            JTextField confpass = new JPasswordField();
+            javax.swing.JPasswordField password = new javax.swing.JPasswordField();
+            javax.swing.JPasswordField confpass = new javax.swing.JPasswordField();
             designer(password, "PASSWORD");
             designer(confpass, "CONFIRM PASSWORD");
             
@@ -234,8 +233,8 @@ public class MgmtUser extends javax.swing.JPanel {
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
             
             if (result == JOptionPane.OK_OPTION) {
-                System.out.println(password.getText());
-                System.out.println(confpass.getText());
+                System.out.println(new String(password.getPassword()));
+                System.out.println(new String(confpass.getPassword()));
             }
         }
     }//GEN-LAST:event_chgpassBtnActionPerformed
