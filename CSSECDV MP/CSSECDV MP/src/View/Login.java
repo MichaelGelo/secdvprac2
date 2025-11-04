@@ -1,6 +1,10 @@
 
 package View;
 
+import javax.swing.JOptionPane;
+
+import Controller.SQLite;
+
 public class Login extends javax.swing.JPanel {
 
     public Frame frame;
@@ -82,9 +86,70 @@ public class Login extends javax.swing.JPanel {
                 .addContainerGap(126, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        frame.mainNav();
-    }//GEN-LAST:event_loginBtnActionPerformed
+    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {                                         
+            String username = usernameFld.getText().trim();
+            String password = passwordFld.getText().trim();
+            
+            
+            if (username.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "Username cannot be empty!", 
+                    "Validation Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                usernameFld.requestFocus();
+                return;
+            }
+            
+            if (password.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "Password cannot be empty!", 
+                    "Validation Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                passwordFld.requestFocus();
+                return;
+            }
+            
+            
+            if (username.length() < 3) {
+                JOptionPane.showMessageDialog(this, 
+                "Username must be at least 3 characters long!", 
+                    "Validation Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                usernameFld.requestFocus();
+                return;
+            }
+            if (password.length() < 6) {
+                JOptionPane.showMessageDialog(this, 
+                    "Password must be at least 6 characters long!", 
+                "Validation Error", 
+                    JOptionPane.ERROR_MESSAGE);
+                passwordFld.requestFocus();
+                return;
+            }
+            
+        SQLite db = new SQLite(); 
+        boolean isAuthenticated = db.authenticateUser(username, password);
+
+        if (isAuthenticated) {
+            JOptionPane.showMessageDialog(this, 
+                "Login successful!", 
+                "Success", 
+                JOptionPane.INFORMATION_MESSAGE);
+            
+        
+            frame.mainNav();
+        } else {
+            JOptionPane.showMessageDialog(this, 
+                "Invalid username or password.", 
+                "Login Failed", 
+                JOptionPane.ERROR_MESSAGE);
+            
+            
+            passwordFld.setText("");
+            passwordFld.requestFocus();
+        }
+    
+        }                           
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         frame.registerNav();

@@ -328,4 +328,37 @@ public class SQLite {
         }
         return product;
     }
+
+    public boolean authenticateUser(String username, String password) {
+        String sql = "SELECT password, locked FROM users WHERE username = ?";
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (!rs.next()) {
+                    
+                    return false;
+                }
+
+                String hashed = rs.getString("password");
+                int locked = rs.getInt("locked");
+
+                if (locked == 1) {
+                    
+                    return false;
+                }
+
+                if (hashed == null) {
+                    return false;
+                }
+
+                return BCrypt.checkpw(password, hashed);
+            }
+
+        } catch (Exception ex) {
+            System.out.print(ex);
+        }
+        return false;
+    }
 }
