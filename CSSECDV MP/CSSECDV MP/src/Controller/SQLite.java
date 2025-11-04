@@ -11,6 +11,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import java.sql.PreparedStatement;
+import org.mindrot.jbcrypt.BCrypt;
+
 public class SQLite {
     
     public int DEBUG_MODE = 0;
@@ -180,12 +183,20 @@ public class SQLite {
     }
     
     public void addUser(String username, String password) {
-        String sql = "INSERT INTO users(username,password) VALUES('" + username + "','" + password + "')";
+        String hashed = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        
+        //String sql = "INSERT INTO users(username,password) VALUES('" + username + "','" + password + "')";
+        String sql = "INSERT INTO users(username, password) VALUES(?, ?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
-            
+            //Statement stmt = conn.createStatement()){
+            //stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, hashed);
+
+            pstmt.executeUpdate();
 //      PREPARED STATEMENT EXAMPLE
 //      String sql = "INSERT INTO users(username,password) VALUES(?,?)";
 //      PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -279,17 +290,17 @@ public class SQLite {
         return users;
     }
     
-    public void addUser(String username, String password, int role) {
-        String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + password + "','" + role + "')";
+    //public void addUser(String username, String password, int role) {
+    //    String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + password + "','" + role + "')";
         
-        try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+    //    try (Connection conn = DriverManager.getConnection(driverURL);
+   //         Statement stmt = conn.createStatement()){
+    //        stmt.execute(sql);
             
-        } catch (Exception ex) {
-            System.out.print(ex);
-        }
-    }
+     //   } catch (Exception ex) {
+    //        System.out.print(ex);
+     //   }
+    //}
     
     public void removeUser(String username) {
         String sql = "DELETE FROM users WHERE username='" + username + "';";
