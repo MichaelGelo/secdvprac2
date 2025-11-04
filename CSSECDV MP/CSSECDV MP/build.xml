@@ -10,6 +10,14 @@
 <project name="CSSECDV" default="default" basedir=".">
     <description>Builds, tests, and runs the project CSSECDV.</description>
     <import file="nbproject/build-impl.xml"/>
+    <dependencies> 
+        <!-- https://mvnrepository.com/artifact/org.mindrot/jbcrypt -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+    </dependencies>
     <!--
 
     There exist several targets which are by default empty and which can be 
