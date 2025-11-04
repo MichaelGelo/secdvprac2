@@ -1,5 +1,6 @@
 
 package View;
+import javax.swing.JOptionPane;
 
 public class Register extends javax.swing.JPanel {
 
@@ -97,7 +98,31 @@ public class Register extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-    frame.registerAction(usernameFld.getText(), new String(passwordFld.getPassword()), new String(confpassFld.getPassword()));
+         String username = usernameFld.getText();
+        String password = new String(passwordFld.getPassword());
+        String confirm = new String(confpassFld.getPassword());
+
+        if (password.length() < 6 || !password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).+$")) {
+            JOptionPane.showMessageDialog(
+                this,                                          
+                "Password must be at least 6 characters long and must include upper, lower, and numeric characters.", 
+                "Invalid Password",                            
+                JOptionPane.ERROR_MESSAGE                       
+            );
+            return;
+        }
+
+        if (!password.equals(confirm)) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Passwords do not match.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        frame.registerAction(username, password, confirm);
         frame.loginNav();
     }//GEN-LAST:event_registerBtnActionPerformed
 
