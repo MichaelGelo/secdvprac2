@@ -1,5 +1,7 @@
 
 package View;
+import Controller.SQLite;
+import Model.User;
 import javax.swing.JOptionPane;
 
 public class Register extends javax.swing.JPanel {
@@ -98,10 +100,12 @@ public class Register extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-         String username = usernameFld.getText();
+        String username = usernameFld.getText();
         String password = new String(passwordFld.getPassword());
         String confirm = new String(confpassFld.getPassword());
-
+        
+        SQLite db = new SQLite();
+        User user = db.getUser(username);
         if (password.length() < 6 || !password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).+$")) {
             JOptionPane.showMessageDialog(
                 this,                                          
@@ -122,7 +126,17 @@ public class Register extends javax.swing.JPanel {
             );
             return;
         }
-
+        
+        if (user.getUsername().equals(username)){
+           JOptionPane.showMessageDialog(
+                this,
+                "Username is already taken.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+            ); 
+           return;
+        }
+        
         frame.registerAction(username, password, confirm);
         frame.loginNav();
     }//GEN-LAST:event_registerBtnActionPerformed

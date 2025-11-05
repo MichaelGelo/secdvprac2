@@ -129,7 +129,7 @@ public class Login extends javax.swing.JPanel {
             
         SQLite db = new SQLite(); 
         boolean isAuthenticated = db.authenticateUser(username, password);
-        User user = db.getUsername(username);
+        User user = db.getUser(username);
         
         if (isAuthenticated && user.getLocked() == 0) {
             JOptionPane.showMessageDialog(this, 

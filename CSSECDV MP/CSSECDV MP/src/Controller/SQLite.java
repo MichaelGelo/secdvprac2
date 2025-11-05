@@ -314,7 +314,7 @@ public class SQLite {
         }
     }
     
-    public User getUsername(String username) {
+    public User getUser(String username) {
         String sql = "SELECT username, locked FROM users WHERE username = ?";
         User user = null;
 
