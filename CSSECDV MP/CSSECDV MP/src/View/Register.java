@@ -109,9 +109,10 @@ public class Register extends javax.swing.JPanel {
                 "Invalid Password",                            
                 JOptionPane.ERROR_MESSAGE                       
             );
-            return;
+            return;   
+            
         }
-
+        
         if (!password.equals(confirm)) {
             JOptionPane.showMessageDialog(
                 this,

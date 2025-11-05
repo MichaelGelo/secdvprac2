@@ -90,6 +90,17 @@ public class Login extends javax.swing.JPanel {
             String username = usernameFld.getText().trim();
             String password = passwordFld.getText().trim();
             
+            //testing if it will commit
+            //testing if it will commit
+            //testing if it will commit//testing if it will commit
+            //testing if it will commit
+            //testing if it will commit//testing if it will commit
+            //testing if it will commit
+            //testing if it will commit
+            //testing if it will commit
+            //testing if it will commit
+            int test = 0;
+            
             
             if (username.isEmpty()) {
                 JOptionPane.showMessageDialog(this, 
