@@ -332,7 +332,7 @@ public class SQLite {
             ex.printStackTrace();
         }
 
-        return user; // null if not found
+        return user; 
     }
     
     public boolean lockUser(String username) {

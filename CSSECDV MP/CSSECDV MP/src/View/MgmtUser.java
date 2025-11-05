@@ -223,7 +223,6 @@ public class MgmtUser extends javax.swing.JPanel {
 
                 if (success) {
                     JOptionPane.showMessageDialog(null, "User \"" + username + "\" has been " + (currentlyLocked ? "unlocked" : "locked") + ".");
-                    // Reflect new state in your table visually
                     tableModel.setValueAt(currentlyLocked ? "0" : "1", table.getSelectedRow(), 3);
                 } else {
                     JOptionPane.showMessageDialog(null, "Failed to update user lock state.", "Error", JOptionPane.ERROR_MESSAGE);
