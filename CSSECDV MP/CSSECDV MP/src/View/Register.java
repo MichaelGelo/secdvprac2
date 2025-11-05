@@ -127,7 +127,7 @@ public class Register extends javax.swing.JPanel {
             return;
         }
         
-        if (user.getUsername().equals(username)){
+        if (user != null && user.getUsername().equals(username)){
            JOptionPane.showMessageDialog(
                 this,
                 "Username is already taken.",

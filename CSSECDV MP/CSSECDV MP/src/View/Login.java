@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 
 import Controller.SQLite;
 import Model.User;
+
 public class Login extends javax.swing.JPanel {
 
     public Frame frame;
@@ -90,7 +91,14 @@ public class Login extends javax.swing.JPanel {
             String username = usernameFld.getText().trim();
             String password = passwordFld.getText().trim();
             
-            
+            if (sessionLocked) {
+                JOptionPane.showMessageDialog(this, 
+                    "Too many failed attempts. Please try again later.", 
+                    "Login Locked", 
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             if (username.isEmpty()) {
                 JOptionPane.showMessageDialog(this, 
                     "Username cannot be empty!", 
@@ -131,41 +139,47 @@ public class Login extends javax.swing.JPanel {
         boolean isAuthenticated = db.authenticateUser(username, password);
         User user = db.getUser(username);
         
-        if (isAuthenticated && user.getLocked() == 0) {
-            JOptionPane.showMessageDialog(this, 
-                "Login successful!", 
-                "Success", 
-                JOptionPane.INFORMATION_MESSAGE);
-            
-        
-            frame.mainNav();
-        } else if (user.getLocked() == 1){
-            JOptionPane.showMessageDialog(this, 
-                "User is Locked.", 
-                "Login Failed", 
-                JOptionPane.ERROR_MESSAGE);
-            
-            
-            passwordFld.setText("");
-            passwordFld.requestFocus();
+        if (user != null && user.getLocked() == 1) {
+        JOptionPane.showMessageDialog(this, 
+            "User is locked.", 
+            "Login Failed", 
+            JOptionPane.ERROR_MESSAGE);
+        return;
+        }
+
+        if (isAuthenticated) {
+        failedAttempts = 0;
+        JOptionPane.showMessageDialog(this, 
+            "Login successful!", 
+            "Success", 
+            JOptionPane.INFORMATION_MESSAGE);
+        frame.mainNav();
         } else {
-            JOptionPane.showMessageDialog(this, 
-                "Invalid username or password.", 
-                "Login Failed", 
-                JOptionPane.ERROR_MESSAGE);
-            
-            
+            failedAttempts++;
+
+            if (failedAttempts >= 5) {
+                sessionLocked = true; 
+                JOptionPane.showMessageDialog(this, 
+                    "Too many failed attempts. Please try again later.", 
+                    "Login Locked", 
+                    JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                    "Invalid username or password. (" + (3 - failedAttempts) + " attempts remaining)", 
+                    "Login Failed", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
             passwordFld.setText("");
             passwordFld.requestFocus();
         }
-    
-        }                           
+    }                           
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         frame.registerNav();
     }//GEN-LAST:event_registerBtnActionPerformed
 
-
+    private int failedAttempts = 0;
+    private boolean sessionLocked = false;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton loginBtn;
