@@ -205,17 +205,32 @@ public class MgmtUser extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void lockBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockBtnActionPerformed
-        if(table.getSelectedRow() >= 0){
-            String state = "lock";
-            if("1".equals(tableModel.getValueAt(table.getSelectedRow(), 3) + "")){
-                state = "unlock";
-            }
-            
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
-            
+        if (table.getSelectedRow() >= 0) {
+            String username = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+            boolean currentlyLocked = "1".equals(tableModel.getValueAt(table.getSelectedRow(), 3) + "");
+            String action = currentlyLocked ? "unlock" : "lock";
+
+            int result = JOptionPane.showConfirmDialog(
+                null,
+                "Are you sure you want to " + action + " user \"" + username + "\"?",
+                "Confirm " + action,
+                JOptionPane.YES_NO_OPTION
+            );
+
             if (result == JOptionPane.YES_OPTION) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                SQLite db = new SQLite();
+                boolean success = db.lockUser(username);
+
+                if (success) {
+                    JOptionPane.showMessageDialog(null, "User \"" + username + "\" has been " + (currentlyLocked ? "unlocked" : "locked") + ".");
+                    // Reflect new state in your table visually
+                    tableModel.setValueAt(currentlyLocked ? "0" : "1", table.getSelectedRow(), 3);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to update user lock state.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a user from the table first.", "No Selection", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_lockBtnActionPerformed
 

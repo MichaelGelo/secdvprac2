@@ -314,6 +314,58 @@ public class SQLite {
         }
     }
     
+    public User getUsername(String username) {
+        String sql = "SELECT username, locked FROM users WHERE username = ?";
+        User user = null;
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    user = new User(rs.getString("username"), null); // password not needed
+                    user.setLocked(rs.getInt("locked"));
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return user; // null if not found
+    }
+    
+    public boolean lockUser(String username) {
+        String getSql = "SELECT locked FROM users WHERE username = ?";
+    String updateSql = "UPDATE users SET locked = ? WHERE username = ?";
+
+    try (Connection conn = DriverManager.getConnection(driverURL);
+         PreparedStatement getStmt = conn.prepareStatement(getSql);
+         PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+
+        // Gets current state
+        getStmt.setString(1, username);
+        ResultSet rs = getStmt.executeQuery();
+
+        if (rs.next()) {
+            int currentLock = rs.getInt("locked");
+            int newLock = (currentLock == 1) ? 0 : 1;
+
+            // Changes state
+            updateStmt.setInt(1, newLock);
+            updateStmt.setString(2, username);
+            int rowsAffected = updateStmt.executeUpdate();
+
+            return rowsAffected > 0;
+        }
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+
+    return false;
+}
+    
     public Product getProduct(String name){
         String sql = "SELECT name, stock, price FROM product WHERE name='" + name + "';";
         Product product = null;

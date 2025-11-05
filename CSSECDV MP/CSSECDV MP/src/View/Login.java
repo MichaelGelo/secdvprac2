@@ -4,7 +4,7 @@ package View;
 import javax.swing.JOptionPane;
 
 import Controller.SQLite;
-
+import Model.User;
 public class Login extends javax.swing.JPanel {
 
     public Frame frame;
@@ -129,8 +129,9 @@ public class Login extends javax.swing.JPanel {
             
         SQLite db = new SQLite(); 
         boolean isAuthenticated = db.authenticateUser(username, password);
-
-        if (isAuthenticated) {
+        User user = db.getUsername(username);
+        
+        if (isAuthenticated && user.getLocked() == 0) {
             JOptionPane.showMessageDialog(this, 
                 "Login successful!", 
                 "Success", 
@@ -138,6 +139,15 @@ public class Login extends javax.swing.JPanel {
             
         
             frame.mainNav();
+        } else if (user.getLocked() == 1){
+            JOptionPane.showMessageDialog(this, 
+                "User is Locked.", 
+                "Login Failed", 
+                JOptionPane.ERROR_MESSAGE);
+            
+            
+            passwordFld.setText("");
+            passwordFld.requestFocus();
         } else {
             JOptionPane.showMessageDialog(this, 
                 "Invalid username or password.", 
